@@ -20,7 +20,6 @@ let isLoading = false;
 document.addEventListener('DOMContentLoaded', () => {
   cargarEmpleados();
   setupEventListeners();
-  addDynamicStyles();
 });
 
 function setupEventListeners() {
@@ -212,33 +211,39 @@ async function editarEmpleado(id) {
 }
 
 // Nueva función para editar los días de un equipo
-async function editarDiasDeEquipo(equipo) {
-    const nuevosDias = prompt(`Introduce los nuevos días de trabajo para el equipo "${equipo}":`);
-    if (!nuevosDias || nuevosDias.trim() === '') {
-        return; // El usuario canceló o no ingresó nada
-    }
+async function promptEditTeamDays() {
+  const equipo = document.getElementById('edit-equipo-dias').value.trim();
+  if (!equipo) {
+    showNotification('Por favor, ingresa el nombre de un equipo para editar sus días.', 'warning');
+    return;
+  }
 
-    setLoading(true);
+  const nuevosDias = prompt(`Introduce los nuevos días de trabajo para el equipo "${equipo}":`);
+  if (!nuevosDias || nuevosDias.trim() === '') {
+    return; // El usuario canceló o no ingresó nada
+  }
 
-    try {
-        const { error } = await supabase
-            .from('Empleados')
-            .update({ dias_trabajo: nuevosDias.trim() })
-            .eq('equipo', equipo);
+  setLoading(true);
 
-        if (error) {
-            console.error('Error al actualizar los días del equipo:', error.message);
-            showNotification(`❌ Error al actualizar los días del equipo: ${error.message}`, 'error');
-        } else {
-            showNotification(`✅ Días de trabajo del equipo "${equipo}" actualizados correctamente.`, 'success');
-            cargarEmpleados(); // Recargar la tabla para ver los cambios
-        }
-    } catch (error) {
-        console.error('Error en editarDiasDeEquipo:', error);
-        showNotification('❌ Error inesperado al actualizar los días del equipo.', 'error');
-    } finally {
-        setLoading(false);
-    }
+  try {
+      const { error } = await supabase
+          .from('Empleados')
+          .update({ dias_trabajo: nuevosDias.trim() })
+          .eq('equipo', equipo);
+
+      if (error) {
+          console.error('Error al actualizar los días del equipo:', error.message);
+          showNotification(`❌ Error al actualizar los días del equipo: ${error.message}`, 'error');
+      } else {
+          showNotification(`✅ Días de trabajo del equipo "${equipo}" actualizados correctamente.`, 'success');
+          cargarEmpleados(); // Recargar la tabla para ver los cambios
+      }
+  } catch (error) {
+      console.error('Error en editarDiasDeEquipo:', error);
+      showNotification('❌ Error inesperado al actualizar los días del equipo.', 'error');
+  } finally {
+      setLoading(false);
+  }
 }
 
 // ========================================
@@ -320,11 +325,6 @@ function renderEmpleados(empleadosArray) {
         <span class="badge badge-primary">
           ${escapeHtml(emp.equipo || '-')}
         </span>
-        <button onclick="editarDiasDeEquipo('${escapeHtml(emp.equipo)}') "
-                class="btn-edit-team-days"
-                title="Editar días del equipo">
-          <span class="btn-icon">📅</span>
-        </button>
       </td>
       <td>${escapeHtml(emp.genero || '-')}</td>
       <td>
@@ -460,103 +460,13 @@ function escapeHtml(text) {
   return text.toString().replace(/[&<>"']/g, m => map[m]);
 }
 
-function addDynamicStyles() {
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes slideInRight {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-    
-    @keyframes slideOutRight {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
-    
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.375rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      text-align: center;
-      white-space: nowrap;
-    }
-    
-    .badge-primary {
-      background: var(--primary-light);
-      color: var(--primary-color);
-    }
-    
-    .badge-secondary {
-      background: var(--gray-100);
-      color: var(--gray-600);
-    }
-    
-    .badge-info {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-    
-    .notification-close {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 0;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-    
-    .notification-close:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .empty-content {
-      text-align: center;
-      padding: 2rem;
-    }
-    
-    .employee-row:hover .btn-edit,
-    .employee-row:hover .btn-delete {
-      transform: scale(1.05);
-    }
-    
-    .actions-cell {
-      white-space: nowrap;
-    }
-    
-    .employee-name {
-      min-width: 150px;
-    }
-  `;
-  document.head.appendChild(style);
-}
-
 // ========================================
 // FUNCIONES GLOBALES (para onclick en HTML)
 // ========================================
 window.eliminarEmpleado = eliminarEmpleado;
 window.editarEmpleado = editarEmpleado;
 window.cargarEmpleados = cargarEmpleados;
-window.editarDiasDeEquipo = editarDiasDeEquipo;
+window.promptEditTeamDays = promptEditTeamDays;
 
 // ========================================
 // MANEJO DE ERRORES GLOBALES

@@ -3,7 +3,7 @@
 ======================================== */
 :root {
   /* Paleta de Colores Suaves */
-  --primary-color: rgb(109, 133, 203);
+  --primary-color: rgb(0, 64, 255);
   --primary-hover: rgb(75, 96, 163);
   --primary-light: rgb(220, 227, 246);
 
@@ -22,7 +22,7 @@
   --warning-color: rgb(235, 185, 100);
   --warning-hover: rgb(200, 155, 70);
   
-  /* Colores neutros - Se mantienen para contraste */
+  /* Colores neutros */
   --white: #ffffff;
   --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
@@ -209,7 +209,8 @@ section {
    TARJETAS
 ======================================== */
 .form-card,
-.search-card {
+.search-card,
+.edit-team-days-section {
   background: var(--white);
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-lg);
@@ -348,49 +349,36 @@ button:hover::before {
   transform: translateY(-1px);
 }
 
-/* Nuevos estilos de botones de la tabla */
 .btn-edit {
-  background: var(--primary-light);
+  background: transparent;
   color: var(--primary-hover);
-  border: 1px solid var(--primary-color);
-  padding: var(--space-2) var(--space-4);
+  border: none;
+  padding: var(--space-1) var(--space-2);
   font-size: var(--font-size-sm);
+  transition: var(--transition-fast);
 }
 
 .btn-edit:hover {
-  background: var(--primary-color);
-  color: var(--white);
-  border-color: var(--primary-hover);
+  background: var(--primary-light);
+  border-radius: var(--border-radius-sm);
+  color: var(--primary-hover);
+  transform: none;
 }
 
 .btn-delete {
-  background: var(--danger-light);
+  background: transparent;
   color: var(--danger-hover);
-  border: 1px solid var(--danger-color);
-  padding: var(--space-2) var(--space-4);
+  border: none;
+  padding: var(--space-1) var(--space-2);
   font-size: var(--font-size-sm);
+  transition: var(--transition-fast);
 }
 
 .btn-delete:hover {
-  background: var(--danger-color);
-  color: var(--white);
-  border-color: var(--danger-hover);
-}
-
-/* Estilo para el nuevo botón de edición de días */
-.btn-edit-team-days {
-  background: var(--warning-color);
-  color: var(--white);
-  padding: var(--space-1) var(--space-2);
+  background: var(--danger-light);
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
-  margin-left: var(--space-2);
-  border: none;
-}
-
-.btn-edit-team-days:hover {
-  background: var(--warning-hover);
-  transform: translateY(-1px);
+  color: var(--danger-hover);
+  transform: none;
 }
 
 .btn-icon {
@@ -400,8 +388,15 @@ button:hover::before {
 /* ========================================
    BÚSQUEDA
 ======================================== */
-.search-controls {
+.search-section {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.search-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
   gap: var(--space-4);
   align-items: end;
 }
@@ -410,8 +405,22 @@ button:hover::before {
   flex: 1;
 }
 
+.edit-team-days-section {
+    padding: var(--space-6);
+}
+
+.edit-team-controls {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-end;
+}
+
+.edit-team-controls .input-group {
+    margin: 0;
+}
+
 /* ========================================
-   TABLA
+   TABLA - HEADERS VISIBLES
 ======================================== */
 .table-container {
   background: var(--white);
@@ -434,9 +443,14 @@ button:hover::before {
   border-bottom: 1px solid var(--gray-200);
 }
 
+/* HEADERS SIEMPRE VISIBLES */
+.employees-table thead {
+  display: table-header-group;
+}
+
 .employees-table th {
-  background: #f4f7fa;
-  color: var(--gray-700);
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+  color: var(--white);
   font-weight: 600;
   font-size: var(--font-size-sm);
   text-transform: uppercase;
@@ -444,14 +458,29 @@ button:hover::before {
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 2px solid var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .employees-table tbody tr {
-  transition: var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
-.employees-table tbody tr:hover {
-  background: var(--gray-50);
+.employees-table tbody td {
+    color: var(--gray-800);
+    background-color: var(--white);
+}
+
+.employees-table tbody tr:hover td {
+    background-color: var(--gray-50);
+}
+
+.employees-table tbody tr:nth-child(even) td {
+    background-color: var(--gray-50);
+}
+
+.employees-table tbody tr:nth-child(even):hover td {
+    background-color: var(--gray-100);
 }
 
 .employees-table tbody tr:last-child td {
@@ -468,7 +497,7 @@ button:hover::before {
 
 .employees-table td .actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-1);
   justify-content: center;
 }
 
@@ -509,6 +538,32 @@ button:hover::before {
   width: 40px;
   height: 40px;
   border-width: 3px;
+}
+
+/* Badges para mejor visualización */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.badge-secondary {
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+
+.badge-info {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 /* ========================================
@@ -566,6 +621,28 @@ button:hover::before {
   to { transform: translateX(0); opacity: 1; }
 }
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
 .employees-table tbody tr {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -609,6 +686,10 @@ button:hover::before {
   }
   
   .search-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-team-controls {
     flex-direction: column;
     align-items: stretch;
   }
@@ -676,51 +757,10 @@ button:hover::before {
 }
 
 /* ========================================
-   MODO OSCURO (OPCIONAL)
-======================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --white: #1e293b;
-    --gray-50: #0f172a;
-    --gray-100: #1e293b;
-    --gray-200: #334155;
-    --gray-300: #475569;
-    --gray-800: #f1f5f9;
-    --gray-900: #ffffff;
-  }
-  
-  body {
-    background: var(--gray-50);
-    color: var(--gray-800);
-  }
-  
-  .background-pattern {
-    opacity: 0.2;
-  }
-  
-  .employees-table th {
-    background: #1e293b;
-    color: var(--gray-100);
-  }
-}
-
-/* ========================================
    UTILIDADES
 ======================================== */
 .hidden {
   display: none !important;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 .text-center {
