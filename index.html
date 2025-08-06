@@ -25,7 +25,6 @@
       </div>
     </header>
 
-    <!-- 📋 Formulario -->
     <section class="form-section">
       <div class="section-header">
         <h2>
@@ -86,17 +85,20 @@
       </form>
     </section>
 
-    <!-- 🔍 Buscador -->
     <section class="search-section">
       <div class="section-header">
         <h2>
           <span class="section-icon">🔍</span>
-          Buscar Empleados
+          Buscar y Filtrar Empleados
         </h2>
       </div>
       
       <div class="search-card">
         <div class="search-controls">
+          <div class="input-group">
+            <label for="buscar-nombre">Filtrar por nombre</label>
+            <input type="text" id="buscar-nombre" placeholder="Nombre completo..." />
+          </div>
           <div class="input-group">
             <label for="buscar-equipo">Filtrar por equipo</label>
             <input type="text" id="buscar-equipo" placeholder="Nombre del equipo..." />
@@ -109,7 +111,6 @@
       </div>
     </section>
 
-    <!-- 👥 Lista -->
     <section class="employees-section">
       <div class="section-header">
         <h2>
@@ -146,7 +147,6 @@
     </section>
   </div>
 
-  <!-- Overlay para estados de carga -->
   <div id="loading-overlay" class="overlay hidden">
     <div class="loading-content">
       <div class="loading-spinner large"></div>

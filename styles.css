@@ -377,6 +377,22 @@ button:hover::before {
   border-color: var(--danger-hover);
 }
 
+/* Estilo para el nuevo botón de edición de días */
+.btn-edit-team-days {
+  background: var(--warning-color);
+  color: var(--white);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  margin-left: var(--space-2);
+  border: none;
+}
+
+.btn-edit-team-days:hover {
+  background: var(--warning-hover);
+  transform: translateY(-1px);
+}
+
 .btn-icon {
   font-size: 1.1em;
 }

@@ -28,7 +28,11 @@ function setupEventListeners() {
   const formulario = document.getElementById('formulario-empleado');
   formulario.addEventListener('submit', handleFormSubmit);
   
-  // Event listener para la búsqueda
+  // Event listener para la búsqueda por nombre
+  const buscarNombre = document.getElementById('buscar-nombre');
+  buscarNombre.addEventListener('input', debounce(handleSearch, 300));
+
+  // Event listener para la búsqueda por equipo
   const buscarEquipo = document.getElementById('buscar-equipo');
   buscarEquipo.addEventListener('input', debounce(handleSearch, 300));
 }
@@ -207,22 +211,59 @@ async function editarEmpleado(id) {
   }
 }
 
+// Nueva función para editar los días de un equipo
+async function editarDiasDeEquipo(equipo) {
+    const nuevosDias = prompt(`Introduce los nuevos días de trabajo para el equipo "${equipo}":`);
+    if (!nuevosDias || nuevosDias.trim() === '') {
+        return; // El usuario canceló o no ingresó nada
+    }
+
+    setLoading(true);
+
+    try {
+        const { error } = await supabase
+            .from('Empleados')
+            .update({ dias_trabajo: nuevosDias.trim() })
+            .eq('equipo', equipo);
+
+        if (error) {
+            console.error('Error al actualizar los días del equipo:', error.message);
+            showNotification(`❌ Error al actualizar los días del equipo: ${error.message}`, 'error');
+        } else {
+            showNotification(`✅ Días de trabajo del equipo "${equipo}" actualizados correctamente.`, 'success');
+            cargarEmpleados(); // Recargar la tabla para ver los cambios
+        }
+    } catch (error) {
+        console.error('Error en editarDiasDeEquipo:', error);
+        showNotification('❌ Error inesperado al actualizar los días del equipo.', 'error');
+    } finally {
+        setLoading(false);
+    }
+}
+
 // ========================================
 // BÚSQUEDA Y FILTRADO
 // ========================================
-async function handleSearch(e) {
-  const valor = e.target.value.trim();
+async function handleSearch() {
+  const nombreFiltro = document.getElementById('buscar-nombre').value.trim();
+  const equipoFiltro = document.getElementById('buscar-equipo').value.trim();
   
-  if (valor === '') {
+  if (nombreFiltro === '' && equipoFiltro === '') {
     cargarEmpleados();
     return;
   }
   
+  let query = supabase.from('Empleados').select('*');
+
+  if (nombreFiltro !== '') {
+    query = query.ilike('nombre', `%${nombreFiltro}%`);
+  }
+  if (equipoFiltro !== '') {
+    query = query.ilike('equipo', `%${equipoFiltro}%`);
+  }
+  
   try {
-    const { data, error } = await supabase
-      .from('Empleados')
-      .select('*')
-      .ilike('equipo', `%${valor}%`);
+    const { data, error } = await query;
     
     if (error) {
       console.error('Error en búsqueda:', error.message);
@@ -279,6 +320,11 @@ function renderEmpleados(empleadosArray) {
         <span class="badge badge-primary">
           ${escapeHtml(emp.equipo || '-')}
         </span>
+        <button onclick="editarDiasDeEquipo('${escapeHtml(emp.equipo)}') "
+                class="btn-edit-team-days"
+                title="Editar días del equipo">
+          <span class="btn-icon">📅</span>
+        </button>
       </td>
       <td>${escapeHtml(emp.genero || '-')}</td>
       <td>
@@ -288,22 +334,24 @@ function renderEmpleados(empleadosArray) {
       </td>
       <td>${escapeHtml(emp.dias_trabajo || '-')}</td>
       <td class="actions-cell">
-        <button 
-          onclick="editarEmpleado(${emp.id})" 
-          class="btn-edit"
-          title="Editar empleado"
-        >
-          <span class="btn-icon">✏️</span>
-          Editar
-        </button>
-        <button 
-          onclick="eliminarEmpleado(${emp.id})" 
-          class="btn-delete"
-          title="Eliminar empleado"
-        >
-          <span class="btn-icon">🗑️</span>
-          Eliminar
-        </button>
+        <div class="actions">
+          <button 
+            onclick="editarEmpleado(${emp.id})" 
+            class="btn-edit"
+            title="Editar empleado"
+          >
+            <span class="btn-icon">✏️</span>
+            <span class="btn-text">Editar</span>
+          </button>
+          <button 
+            onclick="eliminarEmpleado(${emp.id})" 
+            class="btn-delete"
+            title="Eliminar empleado"
+          >
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Eliminar</span>
+          </button>
+        </div>
       </td>
     </tr>
   `).join('');
@@ -508,6 +556,7 @@ function addDynamicStyles() {
 window.eliminarEmpleado = eliminarEmpleado;
 window.editarEmpleado = editarEmpleado;
 window.cargarEmpleados = cargarEmpleados;
+window.editarDiasDeEquipo = editarDiasDeEquipo;
 
 // ========================================
 // MANEJO DE ERRORES GLOBALES
