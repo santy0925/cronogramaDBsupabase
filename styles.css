@@ -2,28 +2,27 @@
    VARIABLES CSS Y CONFIGURACIÓN BASE
 ======================================== */
 :root {
-  /* Colores principales */
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #dbeafe;
-  
-  /* Colores secundarios */
-  --secondary-color: #64748b;
-  --secondary-hover: #475569;
-  
+  /* Paleta de Colores Suaves */
+  --primary-color: rgb(109, 133, 203);
+  --primary-hover: rgb(75, 96, 163);
+  --primary-light: rgb(220, 227, 246);
+
+  --secondary-color: rgb(162, 179, 218);
+  --secondary-hover: rgb(123, 142, 184);
+
   /* Colores de estado */
-  --success-color: #059669;
-  --success-hover: #047857;
-  --success-light: #d1fae5;
+  --success-color: rgb(74, 172, 148);
+  --success-hover: rgb(58, 137, 118);
+  --success-light: rgb(215, 242, 235);
   
-  --danger-color: #dc2626;
-  --danger-hover: #b91c1c;
-  --danger-light: #fee2e2;
+  --danger-color: rgb(225, 100, 111);
+  --danger-hover: rgb(190, 75, 85);
+  --danger-light: rgb(252, 227, 229);
+
+  --warning-color: rgb(235, 185, 100);
+  --warning-hover: rgb(200, 155, 70);
   
-  --warning-color: #d97706;
-  --warning-hover: #b45309;
-  
-  /* Colores neutros */
+  /* Colores neutros - Se mantienen para contraste */
   --white: #ffffff;
   --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
@@ -91,7 +90,7 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   line-height: 1.6;
-  color: var(--gray-800);
+  color: var(--gray-700);
   background: var(--gray-50);
   min-height: 100vh;
   position: relative;
@@ -110,7 +109,7 @@ body {
   background: 
     radial-gradient(circle at 25% 25%, var(--primary-light) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, var(--success-light) 0%, transparent 50%);
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 /* ========================================
@@ -349,28 +348,33 @@ button:hover::before {
   transform: translateY(-1px);
 }
 
+/* Nuevos estilos de botones de la tabla */
 .btn-edit {
-  background: linear-gradient(135deg, var(--success-color), var(--success-hover));
-  color: var(--white);
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  border: 1px solid var(--primary-color);
   padding: var(--space-2) var(--space-4);
   font-size: var(--font-size-sm);
 }
 
 .btn-edit:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-hover);
 }
 
 .btn-delete {
-  background: linear-gradient(135deg, var(--danger-color), var(--danger-hover));
-  color: var(--white);
+  background: var(--danger-light);
+  color: var(--danger-hover);
+  border: 1px solid var(--danger-color);
   padding: var(--space-2) var(--space-4);
   font-size: var(--font-size-sm);
 }
 
 .btn-delete:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background: var(--danger-color);
+  color: var(--white);
+  border-color: var(--danger-hover);
 }
 
 .btn-icon {
@@ -415,8 +419,8 @@ button:hover::before {
 }
 
 .employees-table th {
-  background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
-  color: var(--white);
+  background: #f4f7fa;
+  color: var(--gray-700);
   font-weight: 600;
   font-size: var(--font-size-sm);
   text-transform: uppercase;
@@ -432,7 +436,6 @@ button:hover::before {
 
 .employees-table tbody tr:hover {
   background: var(--gray-50);
-  transform: scale(1.01);
 }
 
 .employees-table tbody tr:last-child td {
@@ -447,10 +450,20 @@ button:hover::before {
   text-align: center;
 }
 
-.employees-table td button {
-  margin: 0 var(--space-1);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-xs);
+.employees-table td .actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.employees-table td .actions button {
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-sm);
+}
+
+.employees-table td .actions button .btn-text {
+  display: none;
 }
 
 /* Estados de carga */
@@ -604,9 +617,17 @@ button:hover::before {
     font-size: var(--font-size-xs);
   }
   
-  .employees-table td button {
-    padding: var(--space-1) var(--space-2);
+  .employees-table td .actions button {
+    padding: var(--space-1);
     margin: 0 1px;
+    font-size: var(--font-size-xs);
+  }
+  
+  .employees-table td .actions button .btn-text {
+    display: inline;
+  }
+  .employees-table td .actions button .btn-icon {
+    display: none;
   }
 }
 
@@ -659,6 +680,11 @@ button:hover::before {
   
   .background-pattern {
     opacity: 0.2;
+  }
+  
+  .employees-table th {
+    background: #1e293b;
+    color: var(--gray-100);
   }
 }
 
