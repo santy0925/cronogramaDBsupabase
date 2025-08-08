@@ -381,9 +381,8 @@ button:hover::before {
   transform: none;
 }
 
-.btn-icon {
-  font-size: 1.1em;
-}
+
+
 
 /* ========================================
    BÚSQUEDA
